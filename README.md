@@ -22,3 +22,13 @@ MONGO_URI=<your-mongodb-connection-string>
 node server.js at Last
 Commit in this repo its conncted to automatic ci/cd of render any commit detected it deploys it again
 
+https://ai-job-portal-fixed-1.onrender.com/
+https://ai-job-portal-fixed-1.onrender.com/api/users/login
+{
+  "email": "soumili@gmail.com",
+  "password": "Password@123"
+}
+use this in postman to login and check
+https://ai-job-portal-fixed-1.onrender.com/api/users/register 
+
+
