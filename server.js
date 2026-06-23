@@ -2,8 +2,11 @@ require("dotenv").config();
 
 const express = require("express");
 const connectDB = require("./config/db");
+
 const userRoutes = require("./routes/userRoutes");
-console.log(process.env.MONGO_URI);
+const jobRoutes = require("./routes/jobRoutes");
+const applicationRoutes = require("./routes/applicationRoutes");
+
 connectDB();
 
 const app = express();
@@ -11,6 +14,8 @@ const app = express();
 app.use(express.json());
 
 app.use("/api/users", userRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/applications", applicationRoutes);
 
 app.get("/", (req, res) => {
   res.send("AI Job Portal Backend Running");
