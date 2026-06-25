@@ -1,3 +1,4 @@
+Check the Apis in the live link too after every commit
 Project Setup Guide
 Prerequisites
 Node.js (v18 or later)
