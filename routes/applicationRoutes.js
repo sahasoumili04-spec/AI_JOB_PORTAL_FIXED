@@ -9,12 +9,18 @@ const {
   deleteApplication
 } = require("../controller/applicationController");
 
-const { protect } = require("../middleware/authMiddleware");
+const {
+  protect,
+  authorizeJobSeeker
+} = require("../middleware/authMiddleware");
 
 // Apply for a Job (Protected Route)
-console.log("protect =", protect);
-console.log("applyForJob =", applyForJob);
-router.post("/", protect, applyForJob);
+router.post(
+  "/",
+  protect,
+  authorizeJobSeeker,
+  applyForJob
+);
 
 // Get All Applications
 router.get("/", getAllApplications);

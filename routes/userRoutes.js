@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-console.log("Register API Hit");
+
 const {
     registerUser,
     loginUser

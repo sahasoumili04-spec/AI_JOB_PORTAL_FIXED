@@ -6,23 +6,50 @@ const {
   getAllJobs,
   getJobById,
   updateJob,
-  deleteJob
+  deleteJob,
+  getMyJobs
 } = require("../controller/jobController");
 
-// Create Job
-const { protect } = require("../middleware/authMiddleware");
-router.post("/", protect, createJob);
+const {
+  protect,
+  authorizeEmployer
+} = require("../middleware/authMiddleware");
 
-// Get All Jobs
+// Create Job (Employer Only)
+router.post(
+  "/",
+  protect,
+  authorizeEmployer,
+  createJob
+);
+// Get Jobs Posted By Logged-in Employer
+router.get(
+  "/my-jobs",
+  protect,
+  authorizeEmployer,
+  getMyJobs
+);
+
+// Get All Jobs (Public)
 router.get("/", getAllJobs);
 
-// Get Single Job
+// Get Single Job (Public)
 router.get("/:id", getJobById);
 
-// Update Job
-router.put("/:id", updateJob);
+// Update Job (Employer Only)
+router.put(
+  "/:id",
+  protect,
+  authorizeEmployer,
+  updateJob
+);
 
-// Delete Job
-router.delete("/:id", deleteJob);
+// Delete Job (Employer Only)
+router.delete(
+  "/:id",
+  protect,
+  authorizeEmployer,
+  deleteJob
+);
 
 module.exports = router;
