@@ -7,11 +7,12 @@ const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
-app.use(cors());
+
 
 connectDB();
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 
