@@ -4,10 +4,11 @@ const router = express.Router();
 const {
   createJob,
   getAllJobs,
+   getMyJobs,
+   getApplicantsForJob,
   getJobById,
   updateJob,
   deleteJob,
-  getMyJobs
 } = require("../controller/jobController");
 
 const {
@@ -24,10 +25,17 @@ router.post(
 );
 // Get Jobs Posted By Logged-in Employer
 router.get(
-  "/my-jobs",
+  "/my",
   protect,
   authorizeEmployer,
   getMyJobs
+);
+// Get Applicants for Employer's Job
+router.get(
+  "/:id/applicants",
+  protect,
+  authorizeEmployer,
+  getApplicantsForJob
 );
 
 // Get All Jobs (Public)

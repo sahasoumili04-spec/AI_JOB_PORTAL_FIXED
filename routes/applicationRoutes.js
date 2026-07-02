@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   applyForJob,
   getAllApplications,
+  getMyApplications,
   getApplicationById,
   updateApplicationStatus,
   deleteApplication
@@ -20,6 +21,14 @@ router.post(
   protect,
   authorizeJobSeeker,
   applyForJob
+);
+
+// Get Logged-in User Applications
+router.get(
+  "/my",
+  protect,
+  authorizeJobSeeker,
+  getMyApplications
 );
 
 // Get All Applications

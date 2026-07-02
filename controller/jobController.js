@@ -1,5 +1,5 @@
 const Job = require("../models/job");
-
+const Application = require("../models/application");
 // Create Job
 const createJob = async (req, res) => {
   try {
@@ -130,6 +130,7 @@ const deleteJob = async (req, res) => {
 };
 
 // Get Jobs Posted By Logged-in Employer
+// Get Jobs Posted By Logged-in Employer
 const getMyJobs = async (req, res) => {
   try {
 
@@ -153,11 +154,55 @@ const getMyJobs = async (req, res) => {
   }
 };
 
+// Get Applicants for Employer's Job
+const getApplicantsForJob = async (req, res) => {
+  try {
+
+    const job = await Job.findById(req.params.id);
+
+    if (!job) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found"
+      });
+    }
+
+    if (job.postedBy.toString() !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied"
+      });
+    }
+
+    const applications = await Application.find({
+      job: req.params.id
+    })
+      .populate("applicant", "name email phone resumeLink")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: applications.length,
+      applications
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+
+  }
+};
+
 module.exports = {
   createJob,
   getAllJobs,
+  getMyJobs,
+  getApplicantsForJob,
   getJobById,
   updateJob,
-  deleteJob,
-  getMyJobs
+  deleteJob
 };
+

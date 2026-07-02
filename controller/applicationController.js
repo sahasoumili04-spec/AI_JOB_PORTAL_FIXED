@@ -2,13 +2,26 @@ const Application = require("../models/application");
 const Job = require("../models/job");
 
 // Apply for a job
+// Apply for a Job
 const applyForJob = async (req, res) => {
   try {
 
     const { job, resumeLink, coverLetter } = req.body;
 
+    // Logged-in User
     const applicant = req.user.id;
 
+    // Check if Job Exists
+    const jobDetails = await Job.findById(job);
+
+    if (!jobDetails) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found"
+      });
+    }
+
+    // Check Duplicate Application
     const existingApplication = await Application.findOne({
       applicant,
       job
@@ -21,13 +34,17 @@ const applyForJob = async (req, res) => {
       });
     }
 
+    // Create Application
     const application = await Application.create({
       applicant,
       job,
+      jobTitle: jobDetails.title,
+      company: jobDetails.company,
       resumeLink,
       coverLetter
     });
 
+    // Increase Application Count
     await Job.findByIdAndUpdate(job, {
       $inc: { applicationsCount: 1 }
     });
@@ -39,13 +56,14 @@ const applyForJob = async (req, res) => {
     });
 
   } catch (error) {
+
     res.status(500).json({
       success: false,
       message: error.message
     });
+
   }
 };
-
 // Get all applications
 const getAllApplications = async (req, res) => {
   try {
@@ -65,6 +83,32 @@ const getAllApplications = async (req, res) => {
       success: false,
       message: error.message
     });
+  }
+};
+
+// Get Logged-in User Applications
+const getMyApplications = async (req, res) => {
+  try {
+
+    const applications = await Application.find({
+      applicant: req.user.id
+    })
+      .populate("job")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: applications.length,
+      applications
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+
   }
 };
 
@@ -163,6 +207,7 @@ const deleteApplication = async (req, res) => {
 module.exports = {
   applyForJob,
   getAllApplications,
+   getMyApplications,
   getApplicationById,
   updateApplicationStatus,
   deleteApplication
